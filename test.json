@@ -1,0 +1,11 @@
+{
+    "name": "hello",
+    "friends": [
+        {
+            "name": "a"
+        },
+        {
+            "name": "b"
+        }
+    ]
+}
