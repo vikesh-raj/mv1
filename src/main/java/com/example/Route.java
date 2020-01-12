@@ -104,11 +104,61 @@ public class Route {
         }
     }
 
-    public static void main(String[] args) {
+    static Graph primsAlgo(Graph g) {
+        Graph mst = new Graph();
+        mst.vertices = new ArrayList<>(g.vertices);
+        mst.edges = new ArrayList<>();
+        int verticesCount = g.vertices.size();
+        int startIndex = 0;
+        List<VertexInfo> vs = initVertexInfo(startIndex, g);
+        for (int i = 0; i < verticesCount; i++) {
+            int next = minVertex(vs, g);
+            if (next < 0) {
+                break;
+            }
+            VertexInfo u = vs.get(next);
+            u.visited = true;
+
+            int minWeight = maxDistance;
+            int nextVertex = -1;
+            for (Graph.Edge edge: g.edges) {
+                if (edge.source != u.index) {
+                    continue;
+                }
+                VertexInfo v = vs.get(edge.target);
+                if (!v.visited && edge.weight < minWeight) {
+                    minWeight = edge.weight;
+                    nextVertex = v.index;
+                }
+            }
+            if (nextVertex != -1) {
+                VertexInfo v = vs.get(nextVertex);
+                v.path = u.index;
+                v.distance = minWeight;
+                mst.edges.add(new Graph.Edge(u.index, v.index, minWeight));
+            }
+        }
+        return mst;
+    }
+
+    static void testShortestDistance() {
         Graph g = createGraph();
         g.addReverseEdges();
         g.showGraph();
         calculateShortest("a", g);
         calculateShortest("b", g);
+    }
+
+    static void testPrimsAlgo() {
+        Graph g = createGraph();
+        g.addReverseEdges();
+        g.showGraph();
+        Graph mst = primsAlgo(g);
+        mst.showGraph();
+    }
+
+    public static void main(String[] args) {
+        testShortestDistance();
+        testPrimsAlgo();
     }
 }
